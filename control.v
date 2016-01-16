@@ -18,15 +18,15 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module control(op, PC, mem_read, mem_reg, mem_write, alu_src, reg_write, alu_ctrl );
+module control(op, reg_dest, branch, mem_read, mem_to_reg, alu_ctrl, mem_write, alu_src, reg_write );
 
 input [4:0] op;
 
-output reg[3:0] alu_ctrl;
-output reg[2:0] PC;
-
+output reg reg_dest;
+output reg branch;
 output reg mem_read;
-output reg mem_reg;
+output reg mem_to_reg;
+output reg[3:0] alu_ctrl;
 output reg mem_write;
 output reg alu_src;
 output reg reg_write;
@@ -37,12 +37,9 @@ initial begin
 	for(i=0;i<=3;i= i+1)begin
 		alu_ctrl[i]<=0;
 	end
-	for(i=0;i<=2;i= i+1)begin
-		PC[i]<=0;
-	end
 	
 	mem_read <= 0;
-	mem_reg <= 0;
+	mem_to_reg <= 0;
 	mem_write <= 0;
 	alu_src <= 0;
 	reg_write <= 0;
@@ -60,21 +57,50 @@ parameter OR  = 'd4;
 //Type memory
 parameter LBD = 'd10;
 parameter LDW = 'd11;
+
 parameter STB = 'd12;
 parameter STW = 'd13;
 parameter MOV = 'd14;
 
 //Brench instruction
-parameter BEQ = 'd30;
-parameter JUMP = 'd31;
+parameter BEQ = 'd20;
+parameter JUMP = 'd21;
 
 //Others
-parameter TLBWRITE = 'd32;
-parameter IRET = 'd33;
+parameter TLBWRITE = 'd30;
+parameter IRET = 'd31;
 
 
-always @(op)
-	begin
+always @(op)begin
+
+	if(op>=0 && op<5)begin
+		reg_dest <=   1;
+		alu_src <=    0;
+		mem_to_reg <= 0;
+		reg_write <=  1;
+		mem_read <=   0;
+		mem_write <=  0;
+		branch <=     0;
+	end
+	else if(op == 10 || op == 11) begin
+		reg_dest <=   0;
+		alu_src <=    1;
+		mem_to_reg <= 1;
+		reg_write <=  1;
+		mem_read <=   1;
+		mem_write <=  0;
+		branch <=     0;
+	end
+	else if(op == 20|| op == 21) begin
+		reg_dest <=   0;
+		alu_src <=    0;
+		mem_to_reg <= 0;
+		reg_write <=  0;
+		mem_read <=   0;
+		mem_write <=  0;
+		branch <=     1;
+	end
+	
 		case(op)
 		// ====== R -type ===== //	
 			ADD:begin
@@ -105,6 +131,7 @@ always @(op)
 		end
 		//===== Branch instruction ===== //
 			BEQ:begin
+			//alu op => maybe do the calcul here
 		end
 			JUMP:begin
 		end

@@ -23,8 +23,9 @@ module control_test();
 
 reg [4:0] opcode;
 
+wire reg_dest;
 wire [3:0] alu_ctrl;
-wire [2:0] PC;
+wire PC;
 wire mem_read;
 wire mem_reg;
 wire mem_write;
@@ -32,11 +33,12 @@ wire alu_src;
 wire reg_write;
 
 control ctrl(
-.op(opcode), 
+.op(opcode),
 //output
-.PC(PC), 
+.reg_dest(reg_dest), 
+.branch(PC), 
 .mem_read(mem_read), 
-.mem_reg(mem_reg), 
+.mem_to_reg(mem_reg), 
 .mem_write(mem_write), 
 .alu_src(alu_src), 
 .reg_write(reg_write), 

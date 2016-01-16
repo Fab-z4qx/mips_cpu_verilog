@@ -35,8 +35,6 @@ reg clk;
 	wire [31:0]r_data2;
 	reg clr;
 
-
-
 integer i;
 initial begin 
 	clk = 1; 
