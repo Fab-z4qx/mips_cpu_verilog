@@ -22,7 +22,6 @@ module control(op, PC, mem_read, mem_reg, mem_write, alu_src, reg_write, alu_ctr
 
 input [4:0] op;
 
-//output reg[3:0] data_mem_wren;
 output reg[3:0] alu_ctrl;
 output reg[2:0] PC;
 
@@ -32,21 +31,37 @@ output reg mem_write;
 output reg alu_src;
 output reg reg_write;
 
-reg[31:0] R[0:31];
+integer i;
+initial begin
 
-//parameter NOP = 'd0;
+	for(i=0;i<=3;i= i+1)begin
+		alu_ctrl[i]<=0;
+	end
+	for(i=0;i<=2;i= i+1)begin
+		PC[i]<=0;
+	end
+	
+	mem_read <= 0;
+	mem_reg <= 0;
+	mem_write <= 0;
+	alu_src <= 0;
+	reg_write <= 0;
+
+end
+
+
 //Type-R
 parameter ADD = 'd0;
 parameter SUB = 'd1;
 parameter MUL = 'd2;
 parameter AND = 'd3;
-parameter OR = 'd4;
+parameter OR  = 'd4;
 
 //Type memory
 parameter LBD = 'd10;
 parameter LDW = 'd11;
-parameter STB ='d12;
-parameter STW ='d13;
+parameter STB = 'd12;
+parameter STW = 'd13;
 parameter MOV = 'd14;
 
 //Brench instruction
@@ -56,6 +71,7 @@ parameter JUMP = 'd31;
 //Others
 parameter TLBWRITE = 'd32;
 parameter IRET = 'd33;
+
 
 always @(op)
 	begin

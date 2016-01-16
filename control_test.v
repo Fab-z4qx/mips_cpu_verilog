@@ -21,17 +21,29 @@
 `include "control.v"
 module control_test();
 
+reg [4:0] opcode;
 
-control ctrl
-(op, 
-PC, 
-mem_read, 
-mem_reg, 
-mem_write, 
-alu_src, 
+wire [3:0] alu_ctrl;
+wire [2:0] PC;
+wire mem_read;
+wire mem_reg;
+wire mem_write;
+wire alu_src;
+wire reg_write;
+
+control ctrl(
+.op(opcode), 
 //output
-reg_write, 
-alu_ctrl );
+.PC(PC), 
+.mem_read(mem_read), 
+.mem_reg(mem_reg), 
+.mem_write(mem_write), 
+.alu_src(alu_src), 
+.reg_write(reg_write), 
+.alu_ctrl(alu_ctrl)
 
+);
+
+initial opcode <= 0; 
 
 endmodule
