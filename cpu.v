@@ -74,6 +74,9 @@ module cpu();
 	wire [31:0] alu_result;
 	wire overflow;
 	wire alu_zero;
+	
+	//wire MUX Register Memory
+	wire [4:0] mux_reg_out;
 
 												
 initial 
@@ -105,9 +108,9 @@ register_mem reg_mem(
 //input
 .r_reg1(r_reg1),
 .r_reg2(r_reg2),
-.w_reg_addr(w_in_reg),
+.w_reg_addr(mux_reg_out),
 .w_data(w_data),
-.reg_w(reg_write),
+.reg_w(reg_w),
 //output to alu
 .r_data1(r_data1),
 .r_data2(r_data2),
@@ -129,7 +132,6 @@ control control(
 .reg_write(reg_write) 
 );
 
-
 alu_control alu_c (
 .ALUOp(alu_ctrl),
 .fonction(),
@@ -137,6 +139,13 @@ alu_control alu_c (
 );
 
 
+
+mux mux_reg(
+.in_a(r_reg2),
+.in_b(w_in_reg),
+.in_select(reg_dest),
+.out_z(mux_reg_out)
+);
 
 alu alu(
 .control(alu_ctrl), 
@@ -146,7 +155,5 @@ alu alu(
 .overflow(alu_overflow), 
 .zero(alu_zero)
 );
-
-
 
 endmodule
