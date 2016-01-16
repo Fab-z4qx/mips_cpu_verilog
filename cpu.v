@@ -53,6 +53,9 @@ module cpu();
 	assign w_in_reg = instruction[15:11];  // destination register
 	assign imm      = instruction[15:0];   //imedia option
 	assign shamt	 = instruction[10:6];
+	
+	wire [31:0]r_data1;
+	wire [31:0]r_data2;
 	//assign w_data = sortieMux;
 
 	//assign rs2 = instruction[15:11]; //source register 2
@@ -60,6 +63,18 @@ module cpu();
 	
 	//assign IMM_OP  = instruction[16];  // IR[16]==1 when source 2 is immediate operand
 	assign immed16 = instruction[15:0];
+	
+	
+	//ALU CONTROL WIRE
+	wire [3:0] alu_ctrl;
+	//wire fonction
+	//wire control_command
+	
+	// ALU WIRE 
+	wire [31:0] alu_result;
+	wire overflow;
+	wire alu_zero;
+
 												
 initial 
 begin
@@ -85,18 +100,6 @@ mem_instruction memI(
 .instruction(instruction)
 );
 
-control ctrl(
-.op(op),
-.PC(pc),
-
-//output
-.mem_reg(), 
-.alu_ctrl(),
-.mem_write(),
-.alu_src(),
-.reg_write(w_in_reg)
-);
-
 register_mem reg_mem(
 .clk(clk),
 //input
@@ -104,37 +107,46 @@ register_mem reg_mem(
 .r_reg2(r_reg2),
 .w_reg_addr(w_in_reg),
 .w_data(w_data),
+.reg_w(reg_write),
 //output to alu
-.r_data1(),
-.r_data2(),
+.r_data1(r_data1),
+.r_data2(r_data2),
 //option 
 .clr()
 );
 
-//register_mem(clk, r_reg1, r_reg2, w_in_reg, w_data, r_data1, r_data2, clr, reg_w);
+control control(
+//input
+.op(op),
+//output
+.reg_dest(reg_dest), 
+.branch(PC), 
+.mem_read(mem_read), 
+.mem_to_reg(mem_reg),
+.alu_ctrl(alu_ctrl),  
+.mem_write(mem_write), 
+.alu_src(alu_src), 
+.reg_write(reg_write) 
+);
 
 
-/*input clk;
-input [4:0] r_reg1, r_reg2; //input reg
-input	[4:0] w_reg;			 //write reg entree
-input	[31:0] w_data;			//write data entree
-input	reg_w;					//1 bit to regWrite condition
-output [31:0] r_data1, r_data2; // output
-*/
-/*
-input [31:0] instruction;
+alu_control alu_c (
+.ALUOp(alu_ctrl),
+.fonction(),
+.ctrl_command()
+);
 
-output reg[3:0] data_mem_wren;
-output reg[3:0] alu_op;
-output reg[2:0] PC;
 
-output reg mem_reg;
-output reg mem_write;
-output reg alu_src;
-output reg reg_write;
-*/
-//register_mem(clk, r_reg1, r_reg2, w_reg, w_data, r_data1, r_data2, clr);
-//control(instruction, PC, mem_read, mem_reg, alu_op, mem_write, alu_src, reg_write, );
+
+alu alu(
+.control(alu_ctrl), 
+.oper1(r_data1), 
+.oper2(r_data2), 
+.result(alu_result), 
+.overflow(alu_overflow), 
+.zero(alu_zero)
+);
+
 
 
 endmodule

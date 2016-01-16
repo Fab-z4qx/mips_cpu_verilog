@@ -28,7 +28,7 @@ parameter MUL = 0010;
 parameter AND = 0110;
 parameter OR  = 0111;
 
-input           ALUOp;
+input     [3:0] ALUOp;
 input     [5:0] fonction;
 output reg[3:0] ctrl_command;
 

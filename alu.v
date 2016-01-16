@@ -18,14 +18,13 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+module alu(control, oper1, oper2, result, overflow, zero);
+
 parameter ADD = 0;
 parameter SUB = 1;
 parameter MUL = 2;
 parameter AND = 3;
 parameter OR = 4;
-
-
-module alu(control, oper1, oper2, result, overflow, zero);
 
 	input [3:0] control;
 	input [31:0] oper1;
@@ -34,6 +33,15 @@ module alu(control, oper1, oper2, result, overflow, zero);
 	output reg [31:0] result;
 	output reg overflow;
 	output reg zero;
+	
+	integer i;
+	initial begin
+		for(i=0; i<32; i= i+1) begin
+			result <=0;
+		end
+		overflow <= 0;
+		zero <= 0;
+	end
 
 	always @(control)
 	begin

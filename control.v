@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module control(op, reg_dest, branch, mem_read, mem_to_reg, alu_ctrl, mem_write, alu_src, reg_write );
 
-input [4:0] op;
+input [5:0] op;
 
 output reg reg_dest;
 output reg branch;
