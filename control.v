@@ -53,6 +53,7 @@ parameter SUB = 'd1;
 parameter MUL = 'd2;
 parameter AND = 'd3;
 parameter OR  = 'd4;
+parameter ADDI= 'd5;
 
 //Type memory
 parameter LBD = 'd10;
@@ -78,6 +79,15 @@ always @(op)begin
 		alu_src <=    0;
 		mem_to_reg <= 0;
 		reg_write <=  1;
+		mem_read <=   0;
+		mem_write <=  0;
+		branch <=     0;
+	end
+	if(op == 5) begin
+		reg_dest <=   0;
+		alu_src <=    1;
+		mem_to_reg <= 0;
+		reg_write <=  0;
 		mem_read <=   0;
 		mem_write <=  0;
 		branch <=     0;
