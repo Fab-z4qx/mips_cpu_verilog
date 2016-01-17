@@ -35,8 +35,9 @@ module cpu();
 	wire [4:0]r_reg2;
 	wire [4:0]w_in_reg;
 	//wire IMM_OP;
-	wire [15:0]imm;
+	//wire [15:0]imm;
 	wire [4:0]shamt;
+	wire [5:0]fonction;
 	
 	//connect to alu
 	//wire r_data1 [31:0];
@@ -48,8 +49,9 @@ module cpu();
    assign r_reg1   = instruction[25:21];  //source register 1
 	assign r_reg2   = instruction[20:16];  // source register 2
 	assign w_in_reg = instruction[15:11];  // destination register
-	assign imm      = instruction[15:0];   //imedia option
+	//assign imm      = instruction[15:0];   //imedia option
 	assign shamt	 = instruction[10:6];
+	assign fonction = instruction[6:0];
 	
 	wire [31:0]r_data1_from_reg;
 	wire [31:0]r_data2_from_reg;
