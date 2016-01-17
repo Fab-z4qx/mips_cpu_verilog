@@ -29,9 +29,6 @@ module cpu();
 	reg  [7:0] first_addr = 0;
 	wire [7:0] pc_to_addr;
 	wire [31:0] instruction;
-	wire [31:0]w_data;
-	
-	//wire reg_write_control;
 	
 	wire [5:0]op;
 	wire [4:0]r_reg1;
@@ -56,11 +53,9 @@ module cpu();
 	
 	wire [31:0]r_data1_from_reg;
 	wire [31:0]r_data2_from_reg;
-	//assign w_data = sortieMux;
-
+	//assign w_data = sortieMux
 	//assign rs2 = instruction[15:11]; //source register 2
 	//assign rst = instruction[15:11]; //source register for store op
-	
 	//assign IMM_OP  = instruction[16];  // IR[16]==1 when source 2 is immediate operand
 	//assign immed16 = instruction[15:0];
 	
