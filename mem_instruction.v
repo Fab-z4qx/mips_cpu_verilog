@@ -29,6 +29,8 @@ reg	[31:0] Imem[0:512];
 
 initial
 // Read the memory contents in the file Prog.bin
+	//$readmemh("v.out",MEM, 32, 64) from 32 to 64 
+	//Maybe do a boot loader here to load the memory
 	$readmemb ("Prog.bin.txt", Imem);
 
 	always @(posedge clk)

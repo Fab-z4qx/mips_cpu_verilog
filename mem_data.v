@@ -18,11 +18,11 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module mem_data(clk, addr, rd, wr, wdata, rdata);
+module mem_data(clk, addr, mem_read_control, write_data_control, wdata, rdata);
 
 input wire clk;
-input wire [6:0] addr;
-input wire rd, wr;
+input wire [31:0] addr;
+input wire mem_read_control, write_data_control;
 input wire [31:0] wdata;
 output wire [31:0] rdata;
 
@@ -33,14 +33,18 @@ output wire [31:0] rdata;
 		for(i=0; i<=127; i=i+1)begin
 			mem[i] <= 0;
 		end
+		mem[0] <= 1;
+		mem[1] <= 1;
+		mem[2] <= 5;
+		mem[3] <= 4;
 	end
 	
 	always @(posedge clk) begin
-		if (wr) begin
+		if (write_data_control) begin
 			mem[addr] <= wdata;
 		end
 	end
 
-	assign rdata = wr ? wdata : mem[addr];
+	assign rdata = write_data_control ? wdata : mem[addr];
 
 endmodule

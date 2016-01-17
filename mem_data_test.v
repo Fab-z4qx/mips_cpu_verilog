@@ -21,7 +21,7 @@
 module mem_data_test();
 
 reg clk;
-reg [6:0] addr;
+reg [31:0] addr;
 reg rd;
 reg wr;
 reg [31:0] wdata;
@@ -32,7 +32,7 @@ initial begin
 	clk <= 0;
 	for(i=0; i<31; i=i+1) begin
 		wdata <= 0;
-		if(i<6) begin addr <= 0; end
+	   addr <= 0; 
 	end
 	rd <= 0;
 	wr <= 1;
@@ -56,8 +56,8 @@ end;
 mem_data mem(
 .clk(clk),
 .addr(addr),
-.rd(rd),
-.wr(wr),
+.mem_read_control(rd),
+.write_data_control(wr),
 .wdata(wdata),
 
 //output

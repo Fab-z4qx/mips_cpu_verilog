@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module mux(input [4:0] in_a, input [4:0] in_b, input in_select, output [4:0]out_z);
+module mux_reg(input [4:0] in_a, input [4:0] in_b, input in_select, output [4:0]out_z);
 
 assign out_z = (in_select == 0) ? in_a : in_b;
 

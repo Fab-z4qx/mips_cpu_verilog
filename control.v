@@ -91,6 +91,16 @@ always @(op)begin
 		mem_write <=  0;
 		branch <=     0;
 	end
+	else if(op ==12 || op == 13 || op == 14) begin
+		reg_dest <=   0;
+		alu_src <=    1;
+		mem_to_reg <= 0;
+		reg_write <=  0;
+		mem_read <=   0;
+		mem_write <=  1;
+		branch <=     0;
+	
+	end
 	else if(op == 20|| op == 21) begin
 		reg_dest <=   0;
 		alu_src <=    0;

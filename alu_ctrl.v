@@ -20,15 +20,15 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module alu_control(ALUOp, fonction, ctrl_command );
+module alu_control(Op_from_control, fonction, ctrl_command);
 
-parameter ADD = 0000;
-parameter SUB = 0001;
-parameter MUL = 0010;
-parameter AND = 0110;
-parameter OR  = 0111;
+parameter ADD = 0;
+parameter SUB = 1;
+parameter MUL = 2;
+parameter AND = 3;
+parameter OR  = 4;
 
-input     [3:0] ALUOp;
+input     [3:0] Op_from_control;
 input     [5:0] fonction;
 output reg[3:0] ctrl_command;
 
@@ -42,21 +42,8 @@ begin
 	end
 end
 
-/*always @(*) begin
-		case(funct[5:0])
-			4'd0:  _funct = 4'd2;	
-			4'd2:  _funct = 4'd6;	
-			4'd5:  _funct = 4'd1;
-			4'd6:  _funct = 4'd13;	
-			4'd7:  _funct = 4'd12;	
-			4'd10: _funct = 4'd7;	
-			default: _funct = 4'd0;
-		endcase
-end
-*/
-
 always @(*) begin
-	case(ALUOp)
+	case(Op_from_control)
 		ADD:begin
 			ctrl_command <= ADD;
 		end
@@ -74,6 +61,5 @@ always @(*) begin
 		end
 	endcase
 end
-
 
 endmodule

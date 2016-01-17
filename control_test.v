@@ -21,7 +21,7 @@
 `include "control.v"
 module control_test();
 
-reg [4:0] opcode;
+reg [5:0] opcode;
 
 wire reg_dest;
 wire [3:0] alu_ctrl;
@@ -43,7 +43,6 @@ control ctrl(
 .alu_src(alu_src), 
 .reg_write(reg_write), 
 .alu_ctrl(alu_ctrl)
-
 );
 
 initial opcode <= 0; 
