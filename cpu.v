@@ -54,7 +54,7 @@ module cpu();
 	
 	assign sign_extand = instruction[15:0];
 	assign shamt	 = instruction[10:6];
-	assign fonction = instruction[6:0];
+	assign fonction = instruction[5:0];
 	
 	wire [31:0]r_data1_from_reg;
 	wire [31:0]r_data2_from_reg;
@@ -152,6 +152,7 @@ mux_register_alu mux_register_to_alu(
 
 control control(
 //input
+.clk(clk),
 .op(op),
 //output
 .reg_dest(reg_dest_control), 
@@ -165,13 +166,15 @@ control control(
 );
 
 alu_control alu_c (
+.clk(clk),
 .Op_from_control(alu_ctrl_op_from_control), //control from general controls
-.fonction(),
+.fonction(fonction),
 //output
 .ctrl_command(alu_control_from_alu_control) //output => COMMAND ALU
 );
 
 alu alu(
+.clk(clk),
 .control(alu_control_from_alu_control), //4bit Command from alu_control 
 .oper1(r_data1_from_reg), //32bit Value 1
 .oper2(mux_register_to_alu_wire), //32bit Value 2
