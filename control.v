@@ -35,10 +35,11 @@ output reg reg_write;
 integer i;
 initial begin
 
+	alu_ctrl <= 3'b0;
+	
 	for(i=0;i<=3;i= i+1)begin
 		alu_ctrl[i]<=0;
 	end
-	
 	
 	reg_dest <= 0;
 	branch <= 0;

@@ -42,6 +42,8 @@ initial
 begin
 	begin
 		ctrl_command <= 32'b0;
+		outreg1 <= 32'b0;
+		outreg2 <= 32'b0;
 	end
 end
 
