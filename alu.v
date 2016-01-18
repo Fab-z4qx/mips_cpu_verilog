@@ -45,37 +45,42 @@ parameter OR = 4;
 
 	always @(control)
 	begin
+	$display("ALU : ALUOPCODE : %d and value: %d %d",control, oper1,oper2) ;
 		case(control)
 		ADD : //ADD
 			begin
 				result <= oper1 + oper2; 
 				overflow 	<= 0;
 				zero		<= (result == 0) ? 1 : 0;
-				$display("ALU : ADD : %d + %d ",oper1,oper2) ;
+				$display("ALU : ADD : %d + %d = %d",oper1,oper2, result) ;
 			end
 		SUB : //SUB
 			begin
 				result <= oper1 - oper2;
 				overflow 	<= 0;
 				zero		<= (result == 0) ? 1 : 0;
+				$display("ALU : SUB : %d - %d = %d",oper1,oper2, result) ;
 			end
 		MUL : //MUL
 			begin
 				result <= oper1 * oper2;
 				overflow 	<= 0;
 				zero		<= (result == 0) ? 1 : 0;
+				$display("ALU : MUL : %d * %d = %d ",oper1,oper2, result) ;
 			end
 		AND : //AND
 			begin
 				result <= oper1 & oper2;
 				overflow 	<= 0;
 				zero		<= (result == 0) ? 1 : 0;
+				$display("ALU : AND : %d & %d = %d",oper1,oper2, result) ;
 			end
 		OR: //OR
 			begin
 				result <= oper1 | oper2;
 				overflow 	<= 0;
 				zero		<= (result == 0) ? 1 : 0;
+				$display("ALU : OR : %d | %d = %d",oper1,oper2, result) ;
 			end
 		10: //LDB
 			begin

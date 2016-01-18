@@ -88,19 +88,24 @@ module cpu();
 	wire alu_zero;
 	
 	//wire MUX Register Memory
-	wire [4:0] mux_reg_out;
+	wire [4:0] mux_write_addr_in_reg;
 	
 	//wire MUX Data Memory
 	wire [31:0]mux_to_w_data_reg;
 	wire [31:0]readed_data_from_data_memory;
-					
+
+integer i;					
 initial 
 begin
     clk = 0;
+	 i = 0;
 end
-  
+
 always begin
+	  if(i>0);
 	  #1000 clk <= ~ clk;
+	  
+	  i=i+1;
 end
 
 PC pc_unit(
@@ -119,7 +124,7 @@ mux_reg mux_reg_entree(
 .in_a(r_reg2),
 .in_b(w_in_reg),
 .in_select(reg_dest_control),
-.out_z(mux_reg_out)
+.out_z(mux_write_addr_in_reg)
 );
 
 register_mem reg_mem(
@@ -127,7 +132,7 @@ register_mem reg_mem(
 //input
 .r_reg1(r_reg1), //addr of reg1
 .r_reg2(r_reg2), //addr of reg2
-.w_reg_addr(mux_reg_out), //addr to write
+.w_reg_addr(mux_write_addr_in_reg), //addr to write
 .w_data(mux_to_w_data_reg), //data to write 
 //w_data ???
 .reg_w(reg_write_control), //control
@@ -191,6 +196,5 @@ mem_data mem_data(
 .wdata(r_data2_from_reg),			// data to write 32bit
 .rdata(readed_data_from_data_memory)				//data readed 32 bit
 );
-
 
 endmodule

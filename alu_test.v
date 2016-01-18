@@ -41,6 +41,18 @@ initial begin
 	r_data1 <= 1;
 	r_data2 <= 1;
 	alu_ctrl <= 0;//add test
+	#500
+	r_data1 <= 7;
+	r_data2 <= 3;
+	alu_ctrl <= 2;
+	#500
+	alu_ctrl <= 0;
+	r_data1 <= 2;
+	r_data2 <= 3;
+	#500
+	alu_ctrl <= 0;
+	r_data1 <= 3;
+	r_data2 <= 3;
 end
 
 alu alu(
