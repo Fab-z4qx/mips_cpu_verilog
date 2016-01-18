@@ -38,6 +38,8 @@ initial begin
 	for(i=0;i<=3;i= i+1)begin
 		alu_ctrl[i]<=0;
 	end
+	
+	
 	reg_dest <= 0;
 	branch <= 0;
 	mem_read <= 0;
