@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module alu_control(Op_from_control, fonction, ctrl_command);
+module alu_control(clk, Op_from_control, fonction, ctrl_command);
 
 parameter ADD = 0;
 parameter SUB = 1;
@@ -28,6 +28,7 @@ parameter MUL = 2;
 parameter AND = 3;
 parameter OR  = 4;
 
+input clk;
 input     [3:0] Op_from_control;
 input     [5:0] fonction;
 output reg[3:0] ctrl_command;
@@ -42,7 +43,7 @@ begin
 	end
 end
 
-always @(Op_from_control) begin
+always @(clk) begin
 	case(Op_from_control)
 		ADD:begin
 			ctrl_command <= ADD;

@@ -22,6 +22,7 @@
 module control_test();
 
 reg [5:0] opcode;
+reg clk;
 
 wire reg_dest;
 wire [3:0] alu_ctrl;
@@ -33,6 +34,7 @@ wire alu_src;
 wire reg_write;
 
 control ctrl(
+.clk(clk),
 .op(opcode),
 //output
 .reg_dest(reg_dest), 
@@ -46,5 +48,7 @@ control ctrl(
 );
 
 initial opcode <= 0; 
+
+always #500 clk = ~clk;
 
 endmodule

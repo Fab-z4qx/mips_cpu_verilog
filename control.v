@@ -18,9 +18,10 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module control(op, reg_dest, branch, mem_read, mem_to_reg, alu_ctrl, mem_write, alu_src, reg_write );
+module control(clk, op, reg_dest, branch, mem_read, mem_to_reg, alu_ctrl, mem_write, alu_src, reg_write );
 
 input [5:0] op;
+input clk;
 
 output reg reg_dest;
 output reg branch;
@@ -71,7 +72,7 @@ parameter JUMP = 'd21;
 parameter TLBWRITE = 'd30;
 parameter IRET = 'd31;
 
-always @(op)begin
+always @(clk)begin
 	if(op>=0 && op<5)begin
 		reg_dest <=   1;
 		alu_src <=    0;

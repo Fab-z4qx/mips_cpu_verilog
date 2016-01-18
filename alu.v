@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module alu(control, oper1, oper2, result, overflow, zero);
+module alu(clk, control, oper1, oper2, result, overflow, zero);
 
 parameter ADD = 0;
 parameter SUB = 1;
@@ -26,6 +26,7 @@ parameter MUL = 2;
 parameter AND = 3;
 parameter OR = 4;
 
+	input clk;
 	input [3:0] control;
 	input [31:0] oper1;
 	input [31:0] oper2;
@@ -43,7 +44,7 @@ parameter OR = 4;
 		zero <= 0;
 	end
 
-	always @(control)
+	always @(clk)
 	begin
 	$display("ALU : ALUOPCODE : %d and value: %d %d",control, oper1,oper2) ;
 		case(control)

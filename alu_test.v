@@ -22,7 +22,7 @@
 
 module alu_test();
 
-
+reg clk;
 reg [3:0]  alu_ctrl;
 reg [31:0] r_data1;
 reg [31:0] r_data2;
@@ -38,18 +38,22 @@ initial begin
 		r_data1[i] <= 0;
 		r_data2[i] <= 0;
 	end
+	clk <= 0;
 	r_data1 <= 1;
 	r_data2 <= 1;
 	alu_ctrl <= 0;//add test
 	#500
+	clk <= 1;
 	r_data1 <= 7;
 	r_data2 <= 3;
-	alu_ctrl <= 2;
+	alu_ctrl <=0;
 	#500
+	clk <= 0;
 	alu_ctrl <= 0;
 	r_data1 <= 2;
 	r_data2 <= 3;
 	#500
+	clk <= 1;
 	alu_ctrl <= 0;
 	r_data1 <= 3;
 	r_data2 <= 3;
@@ -57,6 +61,7 @@ end
 
 alu alu(
 //input
+.clk(clk),
 .control(alu_ctrl), 
 .oper1(r_data1), 
 .oper2(r_data2), 
