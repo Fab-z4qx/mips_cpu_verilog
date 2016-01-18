@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module alu_control(clk, Op_from_control, fonction, ctrl_command);
+module alu_control(clk, Op_from_control, fonction, ctrl_command, reg1, reg2, outreg1, outreg2);
 
 parameter ADD = 0;
 parameter SUB = 1;
@@ -33,6 +33,10 @@ input     [3:0] Op_from_control;
 input     [5:0] fonction;
 output reg[3:0] ctrl_command;
 
+input [31:0]reg1;
+input [31:0]reg2;
+output reg [31:0]outreg1;
+output reg [31:0]outreg2;
 
 integer i;
 initial 
@@ -44,6 +48,9 @@ begin
 end
 
 always @(posedge clk) begin
+	outreg1 <= reg1;
+	outreg2 <= reg2;
+
 	case(Op_from_control)
 		ADD:begin
 			ctrl_command <= ADD;

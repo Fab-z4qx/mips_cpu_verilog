@@ -46,6 +46,7 @@ initial begin
 	alu_src <= 0;
 	reg_write <= 0;
 
+	i = 0;
 end
 
 
@@ -74,6 +75,7 @@ parameter TLBWRITE = 'd30;
 parameter IRET = 'd31;
 
 always @(posedge clk)begin
+//if(i%2==0) begin
 	if((op>=0) && (op<5))begin
 		reg_dest <=   1;
 		alu_src <=    0;
@@ -165,6 +167,7 @@ always @(posedge clk)begin
 		end
 	endcase
 	$display("Control value: \n reg_dest:%d \n mem_to_reg:%d \n reg_write:%d\n mem_read:%d \n mem_write:%d \n branch:%d \n",reg_dest, alu_src, mem_to_reg, reg_write, mem_read, mem_write, branch);
-
+i=i+1;
+//end
 end	
 endmodule

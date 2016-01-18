@@ -97,7 +97,8 @@ module cpu();
 //integer i;					
 initial 
 begin
-    clk = 1;
+    clk = 0;
+	 #10000000;
 	// i = 0;
 end
 
@@ -165,10 +166,17 @@ control control(
 .reg_write(reg_write_control) 
 );
 
+wire [31:0]bypass_1_cycle_out_reg1;
+wire [31:0]bypass_1_cycle_out_reg2;
+
 alu_control alu_c (
 .clk(clk),
 .Op_from_control(alu_ctrl_op_from_control), //control from general controls
 .fonction(fonction),
+.reg1(r_data1_from_reg),
+.reg2(mux_register_to_alu_wire), 
+.outreg1(bypass_1_cycle_out_reg1),
+.outreg2(bypass_1_cycle_out_reg2),
 //output
 .ctrl_command(alu_control_from_alu_control) //output => COMMAND ALU
 );
@@ -176,8 +184,11 @@ alu_control alu_c (
 alu alu(
 .clk(clk),
 .control(alu_control_from_alu_control), //4bit Command from alu_control 
-.oper1(r_data1_from_reg), //32bit Value 1
-.oper2(mux_register_to_alu_wire), //32bit Value 2
+//.oper1(r_data1_from_reg), //32bit Value 1
+//.oper2(mux_register_to_alu_wire), //32bit Value 2
+
+.oper1(bypass_1_cycle_out_reg1),
+.oper2(bypass_1_cycle_out_reg2), //32bit Value 2
 //output
 .result(alu_result),     //32bit output
 .overflow(alu_overflow), //1bit overflow

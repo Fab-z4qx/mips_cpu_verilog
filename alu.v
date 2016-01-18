@@ -42,10 +42,12 @@ parameter OR = 4;
 		end
 		overflow <= 0;
 		zero <= 0;
+		i = 0;
 	end
 
 	always @(posedge clk)
 	begin
+	if(i%2==0 && i>0) begin
 	$display("ALU : ALUOPCODE : %d and value: %d %d",control, oper1,oper2) ;
 		case(control)
 		ADD : //ADD
@@ -121,5 +123,6 @@ parameter OR = 4;
 			end
 	endcase
 	end
-
+	i = i+1;
+	end
 endmodule
