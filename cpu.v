@@ -94,18 +94,18 @@ module cpu();
 	wire [31:0]mux_to_w_data_reg;
 	wire [31:0]readed_data_from_data_memory;
 
-integer i;					
+//integer i;					
 initial 
 begin
-    clk = 0;
-	 i = 0;
+    clk = 1;
+	// i = 0;
 end
 
 always begin
-	  if(i>0);
+	  //if(i>0);
 	  #1000 clk <= ~ clk;
 	  
-	  i=i+1;
+	  //i=i+1;
 end
 
 PC pc_unit(

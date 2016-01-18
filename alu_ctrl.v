@@ -37,13 +37,13 @@ output reg[3:0] ctrl_command;
 integer i;
 initial 
 begin
-	for(i =0; i<3; i=i+1)
+	for(i =0; i<=3; i=i+1)
 	begin
 		ctrl_command[i] <= 0;
 	end
 end
 
-always @(clk) begin
+always @(posedge clk) begin
 	case(Op_from_control)
 		ADD:begin
 			ctrl_command <= ADD;
@@ -60,6 +60,7 @@ always @(clk) begin
 		OR:begin
 			ctrl_command <= OR;
 		end
+	default begin ctrl_command <= ADD; end
 	endcase
 	$display("ALU Control: opcode_received : %d",Op_from_control);
 end

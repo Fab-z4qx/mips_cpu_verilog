@@ -33,16 +33,16 @@ output wire [31:0] rdata;
 		for(i=0; i<=127; i=i+1)begin
 			mem[i] <= 0;
 		end
-		mem[0] <= 1;
-		mem[1] <= 1;
+		mem[0] <= 0;
+		mem[1] <= 2;
 		mem[2] <= 5;
 		mem[3] <= 4;
 	end
 	
 	always @(posedge clk) begin
+	$display("Memory Data: Writing of the value %d in %d",wdata, addr);
 		if (write_data_control) begin
 			mem[addr] <= wdata;
-			$display("Memory Data: Writing of the value %d in %d",wdata, addr);
 		end
 	end
 	

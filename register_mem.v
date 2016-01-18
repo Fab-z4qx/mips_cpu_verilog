@@ -57,12 +57,13 @@ integer i;
 		for(i = 0; i <32; i = i+1)begin
 			  mem[i] <= 0;
 		end
-		mem[0] <= 4;
-		mem[1] <= 3;
+		mem[1] <= 4;
+		mem[2] <= 3;
 	end
 	
 	always @(posedge clk) 
 	begin
+		$display("Registers: r%d = %d",w_reg_addr,w_data);
 		if (reg_w) begin
 			mem[w_reg_addr] <= w_data;
 		end
@@ -71,26 +72,6 @@ integer i;
 				mem[i] <= 0;
 			end
 		end
+		 
 	end
-	
-	/*
-	always @(posedge clk) begin
-		if(r_reg1 >=0) begin
-			r_data1 <= mem[r_reg1];
-		end
-		if(r_reg2 >= 0) begin
-			r_data2 <= mem[r_reg2];
-		end
-		
-		if(reg_w == 1 )begin
-			if(reg_w == 1 && w_reg_addr >= 0 && w_data >= 0)
-			begin
-				mem[w_reg_addr] <= w_data;
-			end
-		end
-		if(clr == 1) begin
-			for(i=0; i<32; i=i+1)begin
-				mem[i] <= 0;
-			end
-		end*/
 endmodule

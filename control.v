@@ -38,7 +38,8 @@ initial begin
 	for(i=0;i<=3;i= i+1)begin
 		alu_ctrl[i]<=0;
 	end
-	
+	reg_dest <= 0;
+	branch <= 0;
 	mem_read <= 0;
 	mem_to_reg <= 0;
 	mem_write <= 0;
@@ -72,8 +73,8 @@ parameter JUMP = 'd21;
 parameter TLBWRITE = 'd30;
 parameter IRET = 'd31;
 
-always @(clk)begin
-	if(op>=0 && op<5)begin
+always @(posedge clk)begin
+	if((op>=0) && (op<5))begin
 		reg_dest <=   1;
 		alu_src <=    0;
 		mem_to_reg <= 0;
