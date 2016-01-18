@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date:    20:35:25 01/14/2016 
+// Create Date:    22:07:09 01/17/2016 
 // Design Name: 
-// Module Name:    PC 
+// Module Name:    mux_register_alu 
 // Project Name: 
 // Target Devices: 
 // Tool versions: 
@@ -18,21 +18,9 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module PC(clk,in_addr,out_addr);
-	 
-	 //reg curr_addr;
-	 input clk;
-	 input [31:0] in_addr;
-	 output reg[31:0] out_addr;
-	 
-		initial begin        
-		  out_addr = 0;
-		end
-		 
-		always @(posedge clk)
-		begin
-			out_addr <= in_addr+4;
-			$display("PC: Curr_addr: %d",out_addr) ;
-		end
-	
+module mux_register_alu(input [31:0] in_a, input [15:0] in_b, input in_select, output [31:0]out_z);
+
+assign out_z = (in_select == 0) ? in_a : in_b;
+
 endmodule
+

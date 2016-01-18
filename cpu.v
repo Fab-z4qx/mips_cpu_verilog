@@ -27,7 +27,7 @@ module cpu();
 	reg clk;
 	//reg  [7:0] first_addr = 4096;
 	reg  [7:0] first_addr = 0;
-	wire [7:0] pc_to_addr;
+	wire [31:0] pc_to_addr;
 	wire [31:0] instruction;
 	
 	wire [5:0]op;
@@ -36,6 +36,7 @@ module cpu();
 	wire [4:0]w_in_reg;
 	//wire IMM_OP;
 	//wire [15:0]imm;
+	wire [31:0]sign_extand;
 	wire [4:0]shamt;
 	wire [5:0]fonction;
 	
@@ -50,6 +51,8 @@ module cpu();
 	assign r_reg2   = instruction[20:16];  // source register 2
 	assign w_in_reg = instruction[15:11];  // destination register
 	//assign imm      = instruction[15:0];   //imedia option
+	
+	assign sign_extand = instruction[15:0];
 	assign shamt	 = instruction[10:6];
 	assign fonction = instruction[6:0];
 	
@@ -60,8 +63,6 @@ module cpu();
 	//assign rst = instruction[15:11]; //source register for store op
 	//assign IMM_OP  = instruction[16];  // IR[16]==1 when source 2 is immediate operand
 	//assign immed16 = instruction[15:0];
-	
-	
 	
 	//wire Control output 
 	wire reg_dest_control;
@@ -75,6 +76,8 @@ module cpu();
 	//ALU CONTROL WIRE output
 	wire [3:0] alu_control_from_alu_control;
 	
+	//Mux reg to alu 
+	wire [31:0] mux_register_to_alu_wire;
 	
 	//wire fonction
 	//wire control_command
@@ -97,10 +100,7 @@ begin
 end
   
 always begin
-	  clk <= 0;
-	  #1000;
-	  clk <= 1;
-	  #1000;
+	  #1000 clk <= ~ clk;
 end
 
 PC pc_unit(
@@ -113,6 +113,13 @@ mem_instruction memI(
 .clk(clk),
 .address(pc_to_addr),
 .instruction(instruction)
+);
+
+mux_reg mux_reg_entree(
+.in_a(r_reg2),
+.in_b(w_in_reg),
+.in_select(reg_dest_control),
+.out_z(mux_reg_out)
 );
 
 register_mem reg_mem(
@@ -129,6 +136,13 @@ register_mem reg_mem(
 .r_data2(r_data2_from_reg),
 //option 
 .clr()
+);
+
+mux_register_alu mux_register_to_alu(
+.in_a(r_data2_from_reg),
+.in_b(sign_extand),
+.in_select(alu_src_control),
+.out_z(mux_register_to_alu_wire)
 );
 
 control control(
@@ -152,23 +166,15 @@ alu_control alu_c (
 .ctrl_command(alu_control_from_alu_control) //output => COMMAND ALU
 );
 
-mux_reg mux_reg_entree(
-.in_a(r_reg2),
-.in_b(w_in_reg),
-.in_select(reg_dest_control),
-.out_z(mux_reg_out)
-);
-
 alu alu(
 .control(alu_control_from_alu_control), //4bit Command from alu_control 
 .oper1(r_data1_from_reg), //32bit Value 1
-.oper2(r_data2_from_reg), //32bit Value 2
+.oper2(mux_register_to_alu_wire), //32bit Value 2
 //output
 .result(alu_result),     //32bit output
 .overflow(alu_overflow), //1bit overflow
 .zero(alu_zero)			//1bit zero
 );
-
 
 mux_data_memory mux_data_memory_to_reg(
 .in_a(readed_data_from_data_memory),

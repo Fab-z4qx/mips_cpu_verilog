@@ -71,9 +71,7 @@ parameter JUMP = 'd21;
 parameter TLBWRITE = 'd30;
 parameter IRET = 'd31;
 
-
 always @(op)begin
-
 	if(op>=0 && op<5)begin
 		reg_dest <=   1;
 		alu_src <=    0;
@@ -161,8 +159,10 @@ always @(op)begin
 			IRET:begin
 		end
 		default:begin
-			$display("Error: undefined opcode: %d",op) ;
+			$display("Control Error: undefined opcode: %d",op) ;
 		end
 	endcase
+	$display("Control value: \n reg_dest:%d \n mem_to_reg:%d \n reg_write:%d\n mem_read:%d \n mem_write:%d \n branch:%d \n",reg_dest, alu_src, mem_to_reg, reg_write, mem_read, mem_write, branch);
+
 end	
 endmodule

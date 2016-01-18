@@ -21,22 +21,20 @@
 module mem_instruction(clk, address, instruction);
 
 input clk;
-input [7:0] address;
-output reg [31:0] instruction;
+input [31:0] address;
+output [31:0] instruction;
 
-reg	[7:0]	memAddr;
 reg	[31:0] Imem[0:512];
 
-initial
+initial begin
 // Read the memory contents in the file Prog.bin
 	//$readmemh("v.out",MEM, 32, 64) from 32 to 64 
 	//Maybe do a boot loader here to load the memory
 	$readmemb ("Prog.bin.txt", Imem);
+end
 
-	always @(posedge clk)
-	begin
-		memAddr = address;
-		instruction = Imem[memAddr];
-	end
+//always begin $display("Instruction mem : %d ",address) ; end
+
+assign instruction=Imem[address[10:2]];
 
 endmodule

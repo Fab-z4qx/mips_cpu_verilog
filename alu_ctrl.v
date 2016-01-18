@@ -42,7 +42,7 @@ begin
 	end
 end
 
-always @(*) begin
+always @(Op_from_control) begin
 	case(Op_from_control)
 		ADD:begin
 			ctrl_command <= ADD;
@@ -60,6 +60,7 @@ always @(*) begin
 			ctrl_command <= OR;
 		end
 	endcase
+	$display("ALU Control: opcode_received : %d",Op_from_control);
 end
 
 endmodule

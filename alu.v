@@ -48,69 +48,70 @@ parameter OR = 4;
 		case(control)
 		ADD : //ADD
 			begin
-				result = oper1 + oper2; 
-				overflow 	= 0;
-				zero		= (result == 0) ? 1 : 0;
+				result <= oper1 + oper2; 
+				overflow 	<= 0;
+				zero		<= (result == 0) ? 1 : 0;
+				$display("ALU : ADD : %d + %d ",oper1,oper2) ;
 			end
 		SUB : //SUB
 			begin
-				result = oper1 - oper2;
-				overflow 	= 0;
-				zero		= (result == 0) ? 1 : 0;
+				result <= oper1 - oper2;
+				overflow 	<= 0;
+				zero		<= (result == 0) ? 1 : 0;
 			end
 		MUL : //MUL
 			begin
-				result = oper1 * oper2;
-				overflow 	= 0;
-				zero		= (result == 0) ? 1 : 0;
+				result <= oper1 * oper2;
+				overflow 	<= 0;
+				zero		<= (result == 0) ? 1 : 0;
 			end
 		AND : //AND
 			begin
-				result = oper1 & oper2;
-				overflow 	= 0;
-				zero		= (result == 0) ? 1 : 0;
+				result <= oper1 & oper2;
+				overflow 	<= 0;
+				zero		<= (result == 0) ? 1 : 0;
 			end
 		OR: //OR
 			begin
-				result = oper1 | oper2;
-				overflow 	= 0;
-				zero		= (result == 0) ? 1 : 0;
+				result <= oper1 | oper2;
+				overflow 	<= 0;
+				zero		<= (result == 0) ? 1 : 0;
 			end
 		10: //LDB
 			begin
-				result = oper1 - oper2;
+				result <= oper1 - oper2;
 			end
 		11: //LBW
 			begin
-				result = oper1 - oper2;
+				result <= oper1 - oper2;
 			end
 		12: //STB
 			begin
-				result = oper1 - oper2;
+				result <= oper1 - oper2;
 			end
 		13: //STW
 			begin
-				result = oper1 - oper2;
+				result <= oper1 - oper2;
 			end
 		14: //MOV
 			begin
-				result = oper1 - oper2;
+				result <= oper1 - oper2;
 			end
 		30: //BEQ
 			begin
-				result = oper1 - oper2;
+				result <= oper1 - oper2;
 			end
 		31: //JUMP
 			begin
-				result = oper1 - oper2;
+				result <= oper1 - oper2;
 			end
 		32: //TLBWRITE
 			begin
-				result = oper1 - oper2;
+				result <= oper1 - oper2;
 			end
 		33: //IRET
 			begin
-				result = oper1 - oper2;
+				result <= oper1 - oper2;
 			end
 	endcase
 	end

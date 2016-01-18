@@ -38,7 +38,6 @@ initial begin
 		r_data1[i] <= 0;
 		r_data2[i] <= 0;
 	end
-	
 	r_data1 <= 1;
 	r_data2 <= 1;
 	alu_ctrl <= 0;//add test

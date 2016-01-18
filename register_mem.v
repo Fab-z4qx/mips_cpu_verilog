@@ -57,6 +57,8 @@ integer i;
 		for(i = 0; i <32; i = i+1)begin
 			  mem[i] <= 0;
 		end
+		mem[0] <= 4;
+		mem[1] <= 3;
 	end
 	
 	always @(posedge clk) 

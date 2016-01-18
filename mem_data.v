@@ -42,9 +42,10 @@ output wire [31:0] rdata;
 	always @(posedge clk) begin
 		if (write_data_control) begin
 			mem[addr] <= wdata;
+			$display("Memory Data: Writing of the value %d in %d",wdata, addr);
 		end
 	end
-
+	
 	assign rdata = write_data_control ? wdata : mem[addr];
 
 endmodule

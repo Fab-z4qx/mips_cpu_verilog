@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date:    20:35:25 01/14/2016 
+// Create Date:    00:51:55 01/18/2016 
 // Design Name: 
-// Module Name:    PC 
+// Module Name:    clock 
 // Project Name: 
 // Target Devices: 
 // Tool versions: 
@@ -18,21 +18,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module PC(clk,in_addr,out_addr);
-	 
-	 //reg curr_addr;
-	 input clk;
-	 input [31:0] in_addr;
-	 output reg[31:0] out_addr;
-	 
-		initial begin        
-		  out_addr = 0;
-		end
-		 
-		always @(posedge clk)
-		begin
-			out_addr <= in_addr+4;
-			$display("PC: Curr_addr: %d",out_addr) ;
-		end
-	
+module clock();
+
+
 endmodule
