@@ -20,6 +20,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 module mux_data_memory(input [31:0] in_a, input [31:0] in_b, input in_select, output [31:0]out_z);
 
-assign out_z = (in_select == 0) ? in_a : in_b;
+assign out_z = (in_select == 0) ? in_b : in_a;
 
 endmodule
