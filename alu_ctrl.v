@@ -38,12 +38,10 @@ input [31:0]reg2;
 output reg [31:0]outreg1;
 output reg [31:0]outreg2;
 
-integer i;
 initial 
 begin
-	for(i =0; i<=3; i=i+1)
 	begin
-		ctrl_command[i] <= 0;
+		ctrl_command <= 32'b0;
 	end
 end
 

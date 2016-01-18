@@ -34,7 +34,6 @@ parameter OR = 4;
 	output reg [31:0] result;
 	output reg overflow;
 	output reg zero;
-	
 	integer i;
 	initial begin
 		for(i=0; i<32; i= i+1) begin
@@ -42,12 +41,10 @@ parameter OR = 4;
 		end
 		overflow <= 0;
 		zero <= 0;
-		i = 0;
 	end
 
 	always @(posedge clk)
 	begin
-	if(i%2==0 && i>0) begin
 	$display("ALU : ALUOPCODE : %d and value: %d %d",control, oper1,oper2) ;
 		case(control)
 		ADD : //ADD
@@ -122,7 +119,5 @@ parameter OR = 4;
 				result <= oper1 - oper2;
 			end
 	endcase
-	end
-	i = i+1;
 	end
 endmodule
