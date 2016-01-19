@@ -32,15 +32,10 @@ output reg mem_write;
 output reg alu_src;
 output reg reg_write;
 
-integer i;
-initial begin
 
-	alu_ctrl <= 3'b0;
-	
-	for(i=0;i<=3;i= i+1)begin
-		alu_ctrl[i]<=0;
-	end
-	
+initial begin
+	alu_ctrl <= 3'b0;	
+	alu_ctrl <= 4'b0;
 	reg_dest <= 0;
 	branch <= 0;
 	mem_read <= 0;
@@ -48,8 +43,7 @@ initial begin
 	mem_write <= 0;
 	alu_src <= 0;
 	reg_write <= 0;
-
-	i = 0;
+	
 end
 
 
@@ -170,7 +164,6 @@ always @(posedge clk)begin
 		end
 	endcase
 	$display("Control value: \n reg_dest:%d \n mem_to_reg:%d \n reg_write:%d\n mem_read:%d \n mem_write:%d \n branch:%d \n",reg_dest, alu_src, mem_to_reg, reg_write, mem_read, mem_write, branch);
-i=i+1;
 //end
 end	
 endmodule

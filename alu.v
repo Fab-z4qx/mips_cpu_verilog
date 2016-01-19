@@ -34,11 +34,8 @@ parameter OR = 4;
 	output reg [31:0] result;
 	output reg overflow;
 	output reg zero;
-	integer i;
 	initial begin
-		for(i=0; i<32; i= i+1) begin
-			result <=0;
-		end
+		result <= 32'b0;
 		overflow <= 0;
 		zero <= 0;
 	end

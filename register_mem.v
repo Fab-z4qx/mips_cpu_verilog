@@ -54,9 +54,10 @@ assign r_data2 = mem[r_reg2];
 
 integer i;
 	initial begin
-		for(i = 0; i <32; i = i+1)begin
-			  mem[i] <= 0;
-		end
+	for(i=0; i<32; i=i+1) begin
+		mem[i] <= 0;
+	end
+	//	mem <= 32'b0;
 		mem[1] <= 4;
 		mem[2] <= 3;
 	end

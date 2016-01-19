@@ -144,8 +144,11 @@ register_mem reg_mem(
 .clr()
 );
 
+wire [31:0]bypass_1_cycle_out_reg1;
+wire [31:0]bypass_1_cycle_out_reg2;
+
 mux_register_alu mux_register_to_alu(
-.in_a(r_data2_from_reg),
+.in_a(bypass_1_cycle_out_reg2),
 .in_b(sign_extand),
 .in_select(alu_src_control),
 .out_z(mux_register_to_alu_wire)
@@ -166,8 +169,7 @@ control control(
 .reg_write(reg_write_control) 
 );
 
-wire [31:0]bypass_1_cycle_out_reg1;
-wire [31:0]bypass_1_cycle_out_reg2;
+
 
 alu_control alu_c (
 .clk(clk),
@@ -177,6 +179,7 @@ alu_control alu_c (
 .reg2(mux_register_to_alu_wire), 
 .outreg1(bypass_1_cycle_out_reg1),
 .outreg2(bypass_1_cycle_out_reg2),
+//.outreg2(bypass_1_cycle_out_reg2),
 //output
 .ctrl_command(alu_control_from_alu_control) //output => COMMAND ALU
 );

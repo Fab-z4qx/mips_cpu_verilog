@@ -33,6 +33,7 @@ output wire [31:0] rdata;
 		for(i=0; i<=127; i=i+1)begin
 			mem[i] <= 0;
 		end
+		//mem <= 32'b0;;
 		mem[0] <= 0;
 		mem[1] <= 2;
 		mem[2] <= 5;
