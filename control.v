@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module control(clk, op, reg_dest, branch, mem_read, mem_to_reg, alu_ctrl, mem_write, alu_src, reg_write );
+module control(clk, op, reg_dest, branch, mem_read, mem_to_reg, alu_ctrl, mem_write, alu_src, reg_write, hold, unhold );
 
 input [5:0] op;
 input clk;
@@ -32,6 +32,9 @@ output reg mem_write;
 output reg alu_src;
 output reg reg_write;
 
+output reg hold;
+input unhold;
+
 
 initial begin
 	alu_ctrl <= 3'b0;	
@@ -43,6 +46,7 @@ initial begin
 	mem_write <= 0;
 	alu_src <= 0;
 	reg_write <= 0;
+	hold <= 0;
 	
 end
 

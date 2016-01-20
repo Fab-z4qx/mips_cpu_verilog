@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date:    20:35:25 01/14/2016 
+// Create Date:    13:00:47 01/19/2016 
 // Design Name: 
-// Module Name:    PC 
+// Module Name:    regr 
 // Project Name: 
 // Target Devices: 
 // Tool versions: 
@@ -18,23 +18,22 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module PC(clk,in_addr,out_addr,hold);
-	 
-	 input clk;
-	 input [31:0] in_addr;
-	 input hold;
-	 output reg[31:0] out_addr;
-	 
-		initial begin  
-		  out_addr = 0;
-		end
+module regr (
+	input clk,
+	input clear,
+	input hold,
+	input wire [N-1:0] in,
+	output reg [N-1:0] out);
 
-		always @(posedge clk)
-		begin
-				if(hold==0) begin
-					out_addr <= in_addr+4;
-				end
-				$display("PC: Curr_addr: %d",out_addr) ;
-		end
+	parameter N = 1;
+
+	always @(posedge clk) begin
+		if (clear)
+			out <= {N{1'b0}};
+		else if (hold)
+			out <= out;
+		else
+			out <= in;
+	end
 	
 endmodule
