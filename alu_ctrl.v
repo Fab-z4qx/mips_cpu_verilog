@@ -47,7 +47,7 @@ begin
 	end
 end
 
-always @(posedge clk) begin
+always @(*) begin
 	outreg1 <= reg1;
 	outreg2 <= reg2;
 
