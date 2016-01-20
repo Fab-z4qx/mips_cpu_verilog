@@ -28,8 +28,11 @@ module cpu();
 	//reg  [7:0] first_addr = 4096;
 	reg  [7:0] first_addr = 0;
 	wire [31:0] pc_to_addr;
-	wire [31:0] instruction;
 	
+	wire [31:0]r_data1_from_reg;
+	wire [31:0]r_data2_from_reg;
+	
+	wire [31:0] instruction;
 	wire [5:0]op;
 	wire [4:0]r_reg1;
 	wire [4:0]r_reg2;
@@ -39,12 +42,6 @@ module cpu();
 	wire [31:0]sign_extand;
 	wire [4:0]shamt;
 	wire [5:0]fonction;
-	
-	//connect to alu
-	//wire r_data1 [31:0];
-	//wire r_data2 [31:0];
-	//	wire rst[4:0];
-	//	wire IMM_OP[0:15];
 	
 	assign op       = instruction[31:26];  // opcode field
    assign r_reg1   = instruction[25:21];  //source register 1
@@ -56,8 +53,6 @@ module cpu();
 	assign shamt	 = instruction[10:6];
 	assign fonction = instruction[5:0];
 	
-	wire [31:0]r_data1_from_reg;
-	wire [31:0]r_data2_from_reg;
 	//assign w_data = sortieMux
 	//assign rs2 = instruction[15:11]; //source register 2
 	//assign rst = instruction[15:11]; //source register for store op
@@ -93,20 +88,26 @@ module cpu();
 	//wire MUX Data Memory
 	wire [31:0]mux_to_w_data_reg;
 	wire [31:0]readed_data_from_data_memory;
-
-//integer i;					
+	
+   wire reg_dest_control_pipe;
+	wire PC_control_pipe;
+	wire mem_read_control_pipe;
+	wire mem_reg_control_pipe;
+	wire [3:0] alu_ctrl_op_from_control_pipe;
+	wire mem_write_control_pipe;
+	wire alu_src_control_pipe;
+	wire reg_write_control_pipe;
+	
+	wire stall_ID_EX_CONTROL;
+				
 initial 
 begin
     clk = 0;
 	 #10000000;
-	// i = 0;
 end
 
 always begin
-	  //if(i>0);
-	  #1000 clk <= ~ clk;
-	  
-	  //i=i+1;
+	  #1000 clk <= ~ clk;	  
 end
 
 PC pc_unit(
@@ -115,16 +116,26 @@ PC pc_unit(
 .out_addr(pc_to_addr)
 );
 
+
+wire [31:0] instruction_to_pipeline_IF_ID;
+wire stall_IF_ID;
+wire clear_IF_ID;
+ 
 mem_instruction memI(
 .clk(clk),
 .address(pc_to_addr),
-.instruction(instruction)
+.instruction(instruction_to_pipeline_IF_ID)
 );
+
+regr #(.N(32)) IF_ID(.clk(clk),
+					.hold(stall_s1_s2), .clear(flush_s1),
+					.in(instruction_to_pipeline_IF_ID), .out(instruction));
+
 
 mux_reg mux_reg_entree(
 .in_a(r_reg2),
 .in_b(w_in_reg),
-.in_select(reg_dest_control),
+.in_select(reg_dest_control_pipe),
 .out_z(mux_write_addr_in_reg)
 );
 
@@ -136,7 +147,7 @@ register_mem reg_mem(
 .w_reg_addr(mux_write_addr_in_reg), //addr to write
 .w_data(mux_to_w_data_reg), //data to write 
 //w_data ???
-.reg_w(reg_write_control), //control
+.reg_w(reg_write_control_pipe), //control
 //output to alu
 .r_data1(r_data1_from_reg),
 .r_data2(r_data2_from_reg),
@@ -144,16 +155,15 @@ register_mem reg_mem(
 .clr()
 );
 
-wire [31:0]bypass_1_cycle_out_reg1;
-wire [31:0]bypass_1_cycle_out_reg2;
+wire stall_ID_EX_REG;
+wire [31:0] r_data1_from_ID_EX_REG;
+wire [31:0] r_data2_from_ID_EX_REG;
+wire [4:0] write_addr_in_reg_from_ID_EX_REG;
 
-mux_register_alu mux_register_to_alu(
-.in_a(bypass_1_cycle_out_reg2),
-.in_b(sign_extand),
-.in_select(alu_src_control),
-.out_z(mux_register_to_alu_wire)
-);
-
+regr #(.N(69)) ID_EX_REG(.clk(clk), .clear(stall_ID_EX), .hold(1'b0),
+			.in({r_data1_from_reg, r_data2_from_reg, mux_write_addr_in_reg}),
+			.out({r_data1_from_ID_EX_REG, r_data2_from_ID_EX_REG, write_addr_in_reg_from_ID_EX_REG}));
+			
 control control(
 //input
 .clk(clk),
@@ -169,16 +179,45 @@ control control(
 .reg_write(reg_write_control) 
 );
 
+	
+regr #(.N(11)) ID_EX_CONTROL(.clk(clk), .clear(stall_ID_EX_CONTROL), .hold(1'b0),
+			.in({reg_dest_control, 
+			PC_control, 
+			mem_read_control, 
+			mem_reg_control,
+			alu_ctrl_op_from_control,
+			mem_write_control,
+			alu_src_control,
+			reg_write_control }),
+			
+			.out({reg_dest_control_pipe,
+			PC_control_pipe,
+			mem_read_control_pipe,
+			mem_reg_control_pipe,
+			alu_ctrl_op_from_control_pipe,
+			mem_write_control_pipe, 
+			alu_src_control_pipe, 
+			reg_write_control_pipe}));
 
+wire [31:0]bypass_1_cycle_out_reg1;
+wire [31:0]bypass_1_cycle_out_reg2;
+
+
+mux_register_alu mux_register_to_alu(
+.in_a(r_data2_from_ID_EX_REG),
+.in_b(sign_extand),
+.in_select(alu_src_control_pipe),
+.out_z(mux_register_to_alu_wire)
+);
 
 alu_control alu_c (
 .clk(clk),
-.Op_from_control(alu_ctrl_op_from_control), //control from general controls
+.Op_from_control(alu_ctrl_op_from_control_pipe), //control from general controls
 .fonction(fonction),
-.reg1(r_data1_from_reg),
-.reg2(mux_register_to_alu_wire), 
-.outreg1(bypass_1_cycle_out_reg1),
-.outreg2(bypass_1_cycle_out_reg2),
+.reg1(),
+.reg2(), 
+.outreg1(),
+.outreg2(),
 //.outreg2(bypass_1_cycle_out_reg2),
 //output
 .ctrl_command(alu_control_from_alu_control) //output => COMMAND ALU
@@ -187,31 +226,63 @@ alu_control alu_c (
 alu alu(
 .clk(clk),
 .control(alu_control_from_alu_control), //4bit Command from alu_control 
-//.oper1(r_data1_from_reg), //32bit Value 1
-//.oper2(mux_register_to_alu_wire), //32bit Value 2
+.oper1(r_data1_from_ID_EX_REG), //32bit Value 1
+.oper2(mux_register_to_alu_wire), //32bit Value 2
 
-.oper1(bypass_1_cycle_out_reg1),
-.oper2(bypass_1_cycle_out_reg2), //32bit Value 2
+//.oper1(bypass_1_cycle_out_reg1),
+//.oper2(bypass_1_cycle_out_reg2), //32bit Value 2
+
 //output
 .result(alu_result),     //32bit output
 .overflow(alu_overflow), //1bit overflow
 .zero(alu_zero)			//1bit zero
 );
 
-mux_data_memory mux_data_memory_to_reg(
-.in_a(readed_data_from_data_memory),
-.in_b(alu_result),
-.in_select(mem_reg_control),
-.out_z(mux_to_w_data_reg)
-);
+
+wire [31:0] alu_result_from_EX_MEM;
+wire [31:0] r_data2_from_EX_MEM;
+wire mem_read_control_from_EX_MEM;
+wire mem_write_control_from_EX_MEM;
+wire mem_reg_control_from_EX_MEM;
+wire [4:0] write_addr_in_reg_from_EX_MEM;
+ 
+regr #(.N(72)) EX_MEM(.clk(clk), .clear(stall_EX_MEM), .hold(1'b0),
+		.in({alu_result, r_data2_from_ID_EX_REG, mem_read_control_pipe, mem_write_control_pipe, mem_reg_control_pipe, write_addr_in_reg_from_ID_EX_REG}),
+		.out({alu_result_from_EX_MEM, r_data2_from_EX_MEM, mem_read_control_from_EX_MEM, mem_write_control_from_EX_MEM, mem_reg_control_from_EX_MEM, write_addr_in_reg_from_EX_MEM}));
 
 mem_data mem_data(
 .clk(clk),        		//clk 1bit
-.addr(alu_result), 		//addr 32bit 
-.mem_read_control(mem_read_control),    //mem_read control 1bit 
-.write_data_control(mem_write_control), // write_data control 1bit 
-.wdata(r_data2_from_reg),			// data to write 32bit
+.addr(alu_result_from_EX_MEM), 		//addr 32bit 
+.mem_read_control(mem_read_control_from_EX_MEM),    //mem_read control 1bit 
+.write_data_control(mem_write_control_from_EX_MEM), // write_data control 1bit 
+.wdata(r_data2_from_EX_MEM),			// data to write 32bit
 .rdata(readed_data_from_data_memory)				//data readed 32 bit
 );
+
+
+//pipeline WB mem_reg_control_from_EX_MEM et write_addr_in_reg_from_EX_MEM
+
+wire mem_reg_control_from_MEM_WB;
+wire [31:0] readed_data_from_memory_MEM_WB;
+wire [31:0] r_data2_from_Dmemory_MEM_WB;
+wire [4:0]  write_addr_in_reg_from_MEM_WB;
+wire [31:0] alu_result_from_MEM_WB;
+
+regr #(.N(70)) MEM_WB(.clk(clk), .clear(stall_EX_MEM), .hold(1'b0),
+		.in({mem_reg_control_from_EX_MEM, alu_result_from_EX_MEM, readed_data_from_data_memory, write_addr_in_reg_from_EX_MEM}),
+	  .out({mem_reg_control_from_MEM_WB, alu_result_from_MEM_WB, readed_data_from_memory_MEM_WB, write_addr_in_reg_from_MEM_WB }));
+
+mux_data_memory mux_data_memory_to_reg(
+.in_a(readed_data_from_memory_MEM_WB),
+.in_b(alu_result_from_MEM_WB),
+.in_select(mem_reg_control_from_MEM_WB),
+.out_z(mux_to_w_data_reg)
+);
+
+
+
+
+
+
 
 endmodule
