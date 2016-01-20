@@ -18,11 +18,10 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module PC(clk,in_addr,out_addr,hold);
+module PC(clk,in_addr,out_addr);
 	 
 	 input clk;
 	 input [31:0] in_addr;
-	 input hold;
 	 output reg[31:0] out_addr;
 	 
 		initial begin  
@@ -31,9 +30,7 @@ module PC(clk,in_addr,out_addr,hold);
 
 		always @(posedge clk)
 		begin
-				if(hold==0) begin
-					out_addr <= in_addr+4;
-				end
+				out_addr <= in_addr+4;
 				$display("PC: Curr_addr: %d",out_addr) ;
 		end
 	

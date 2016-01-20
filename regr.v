@@ -27,6 +27,9 @@ module regr (
 
 	parameter N = 1;
 
+	initial begin
+		out <= {N{1'b0}};
+	end;
 	always @(posedge clk) begin
 		if (clear)
 			out <= {N{1'b0}};
