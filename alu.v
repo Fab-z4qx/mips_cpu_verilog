@@ -40,7 +40,7 @@ parameter OR = 4;
 		zero <= 0;
 	end
 
-	always @(posedge clk)
+	always @(*)
 	begin
 	$display("ALU : ALUOPCODE : %d and value: %d %d",control, oper1,oper2) ;
 		case(control)

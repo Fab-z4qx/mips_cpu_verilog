@@ -75,7 +75,7 @@ parameter JUMP = 'd21;
 parameter TLBWRITE = 'd30;
 parameter IRET = 'd31;
 
-always @(posedge clk)begin
+always @(*)begin
 //if(i%2==0) begin
 	if((op>=0) && (op<5))begin
 		reg_dest <=   1;

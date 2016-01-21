@@ -146,7 +146,8 @@ register_mem reg_mem(
 .r_reg1(r_reg1), //addr of reg1
 .r_reg2(r_reg2), //addr of reg2
 //.w_reg_addr(mux_write_addr_in_reg), //addr to write
-.w_reg_addr(write_addr_in_reg_from_MEM_WB_ADDR),
+//.w_reg_addr(write_addr_in_reg_from_MEM_WB_ADDR),
+.w_reg_addr(write_addr_in_reg_from_MEM_WB),
 .w_data(mux_to_w_data_reg), //data to write 
 //w_data ???
 .reg_w(reg_write_control_pipe), //control
@@ -285,9 +286,9 @@ mux_data_memory mux_data_memory_to_reg(
 .out_z(mux_to_w_data_reg)
 );
 
-
+/*
 reg_pipe #(.N(5)) MEM_WB_ADDR(.clk(clk), .clear(stall_EX_MEM), .hold(1'b0),
 		.in({write_addr_in_reg_from_MEM_WB}),
-	  .out({write_addr_in_reg_from_MEM_WB_ADDR}));
+	  .out({write_addr_in_reg_from_MEM_WB_ADDR}));*/
 
 endmodule
