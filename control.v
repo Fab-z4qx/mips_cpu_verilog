@@ -122,6 +122,7 @@ always @(*)begin
 		mem_read <=   0;
 		mem_write <=  0;
 		branch <=     1;
+		alu_ctrl <=   0;
 	end
 	
 		case(op)

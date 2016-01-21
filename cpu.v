@@ -107,6 +107,8 @@ module cpu();
 	wire [31:0] alu_result_from_MEM_WB;
 	wire [4:0] write_addr_in_reg_from_MEM_WB_ADDR;
 	wire reg_write_control_pipe_MEM_WB;
+	
+	wire [31:0] pc_to_addr_from_ID_EX_REG;
 
 initial 
 begin
@@ -118,26 +120,38 @@ always begin
 	  #1000 clk <= ~ clk;	  
 end
 
+wire [31:0] addr_from_jump;
 PC pc_unit(
 .clk(clk),
 .in_addr(pc_to_addr),
+//.in_addr(addr_from_jump),
 .out_addr(pc_to_addr)
 );
 
+add_jump_unit jump_unit(
+.clk(clk), 
+.branch_command(PC_control), 
+.sign_extand(sign_extand),
+.pc_addr(pc_to_addr_from_ID_EX_REG), 
+//output
+.jump_addr(addr_from_jump)
+);
 
 wire [31:0] instruction_to_pipeline_IF_ID;
 wire stall_IF_ID;
 wire clear_IF_ID;
- 
+wire [31:0] pc_to_addr_from_IF_ID;
+
 mem_instruction memI(
 .clk(clk),
 .address(pc_to_addr),
 .instruction(instruction_to_pipeline_IF_ID)
 );
 
-reg_pipe #(.N(32)) IF_ID(.clk(clk),
+reg_pipe #(.N(64)) IF_ID(.clk(clk),
 					.hold(stall_s1_s2), .clear(flush_s1),
-					.in(instruction_to_pipeline_IF_ID), .out(instruction));
+					.in({instruction_to_pipeline_IF_ID, pc_to_addr}), 
+					.out({instruction, pc_to_addr_from_IF_ID}));
 
 
 register_mem reg_mem(
@@ -165,9 +179,11 @@ wire [4:0] write_addr_in_reg_from_ID_EX_REG;
 wire [31:0] sign_extand_ID_EX_REG;
 wire [4:0] r_reg2_ID_EX_REG;
 
-reg_pipe #(.N(106)) ID_EX_REG(.clk(clk), .clear(stall_ID_EX), .hold(1'b0),
-			.in({r_data1_from_reg, r_data2_from_reg,r_reg2, w_in_reg, sign_extand }),
-			.out({r_data1_from_ID_EX_REG, r_data2_from_ID_EX_REG, r_reg2_ID_EX_REG, write_addr_in_reg_from_ID_EX_REG, sign_extand_ID_EX_REG}));
+
+reg_pipe #(.N(138)) ID_EX_REG(.clk(clk), .clear(stall_ID_EX), .hold(1'b0),
+			.in({r_data1_from_reg, r_data2_from_reg,r_reg2, w_in_reg, sign_extand, pc_to_addr_from_IF_ID }),
+			.out({r_data1_from_ID_EX_REG, r_data2_from_ID_EX_REG, r_reg2_ID_EX_REG, 
+			write_addr_in_reg_from_ID_EX_REG, sign_extand_ID_EX_REG, pc_to_addr_from_ID_EX_REG}));
 			
 		
 mux_reg mux_reg_rdest(
