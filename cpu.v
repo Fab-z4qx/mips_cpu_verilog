@@ -135,16 +135,10 @@ mem_instruction memI(
 .instruction(instruction_to_pipeline_IF_ID)
 );
 
-regr #(.N(32)) IF_ID(.clk(clk),
+reg_pipe #(.N(32)) IF_ID(.clk(clk),
 					.hold(stall_s1_s2), .clear(flush_s1),
 					.in(instruction_to_pipeline_IF_ID), .out(instruction));
 
-mux_reg mux_reg_entree(
-.in_a(r_reg2),
-.in_b(w_in_reg),
-.in_select(reg_dest_control_pipe),
-.out_z(mux_write_addr_in_reg)
-);
 
 register_mem reg_mem(
 .clk(clk),
@@ -168,11 +162,21 @@ wire [31:0] r_data1_from_ID_EX_REG;
 wire [31:0] r_data2_from_ID_EX_REG;
 wire [4:0] write_addr_in_reg_from_ID_EX_REG;
 wire [31:0] sign_extand_ID_EX_REG;
+wire [4:0] r_reg2_ID_EX_REG;
 
-regr #(.N(101)) ID_EX_REG(.clk(clk), .clear(stall_ID_EX), .hold(1'b0),
-			.in({r_data1_from_reg, r_data2_from_reg, mux_write_addr_in_reg, sign_extand }),
-			.out({r_data1_from_ID_EX_REG, r_data2_from_ID_EX_REG, write_addr_in_reg_from_ID_EX_REG, sign_extand_ID_EX_REG}));
+reg_pipe #(.N(106)) ID_EX_REG(.clk(clk), .clear(stall_ID_EX), .hold(1'b0),
+			.in({r_data1_from_reg, r_data2_from_reg,r_reg2, w_in_reg, sign_extand }),
+			.out({r_data1_from_ID_EX_REG, r_data2_from_ID_EX_REG, r_reg2_ID_EX_REG, write_addr_in_reg_from_ID_EX_REG, sign_extand_ID_EX_REG}));
 			
+		
+mux_reg mux_reg_rdest(
+.in_a(r_reg2_ID_EX_REG),
+.in_b(write_addr_in_reg_from_ID_EX_REG),
+.in_select(reg_dest_control_pipe),
+.out_z(mux_write_addr_in_reg)
+);
+
+		
 control control(
 //input
 .clk(clk),
@@ -188,7 +192,7 @@ control control(
 .reg_write(reg_write_control) 
 );
 
-regr #(.N(11)) ID_EX_CONTROL(.clk(clk), .clear(stall_ID_EX_CONTROL), .hold(1'b0),
+reg_pipe #(.N(11)) ID_EX_CONTROL(.clk(clk), .clear(stall_ID_EX_CONTROL), .hold(1'b0),
 			.in({reg_dest_control, 
 			PC_control, 
 			mem_read_control, 
@@ -256,8 +260,8 @@ wire mem_reg_control_from_EX_MEM;
 wire reg_write_control_pipe_EX_MEM;
 wire [4:0] write_addr_in_reg_from_EX_MEM;
  
-regr #(.N(73)) EX_MEM(.clk(clk), .clear(stall_EX_MEM), .hold(1'b0),
-		.in({alu_result, r_data2_from_ID_EX_REG, mem_read_control_pipe, mem_write_control_pipe, mem_reg_control_pipe, write_addr_in_reg_from_ID_EX_REG, reg_write_control_pipe}),
+reg_pipe #(.N(73)) EX_MEM(.clk(clk), .clear(stall_EX_MEM), .hold(1'b0),
+		.in({alu_result, r_data2_from_ID_EX_REG, mem_read_control_pipe, mem_write_control_pipe, mem_reg_control_pipe, mux_write_addr_in_reg, reg_write_control_pipe}),
 		.out({alu_result_from_EX_MEM, r_data2_from_EX_MEM, mem_read_control_from_EX_MEM, mem_write_control_from_EX_MEM, mem_reg_control_from_EX_MEM, write_addr_in_reg_from_EX_MEM, reg_write_control_pipe_EX_MEM}));
 
 mem_data mem_data(
@@ -270,7 +274,7 @@ mem_data mem_data(
 );
 
 
-regr #(.N(71)) MEM_WB(.clk(clk), .clear(stall_EX_MEM), .hold(1'b0),
+reg_pipe #(.N(71)) MEM_WB(.clk(clk), .clear(stall_EX_MEM), .hold(1'b0),
 		.in({mem_reg_control_from_EX_MEM, alu_result_from_EX_MEM, readed_data_from_data_memory, write_addr_in_reg_from_EX_MEM, reg_write_control_pipe_EX_MEM}),
 	  .out({mem_reg_control_from_MEM_WB, alu_result_from_MEM_WB, readed_data_from_memory_MEM_WB, write_addr_in_reg_from_MEM_WB, reg_write_control_pipe_MEM_WB }));
 
@@ -282,7 +286,7 @@ mux_data_memory mux_data_memory_to_reg(
 );
 
 
-regr #(.N(5)) MEM_WB_ADDR(.clk(clk), .clear(stall_EX_MEM), .hold(1'b0),
+reg_pipe #(.N(5)) MEM_WB_ADDR(.clk(clk), .clear(stall_EX_MEM), .hold(1'b0),
 		.in({write_addr_in_reg_from_MEM_WB}),
 	  .out({write_addr_in_reg_from_MEM_WB_ADDR}));
 

@@ -19,7 +19,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module PC(clk,in_addr,out_addr);
-	 
 	 input clk;
 	 input [31:0] in_addr;
 	 output reg[31:0] out_addr;
@@ -33,5 +32,4 @@ module PC(clk,in_addr,out_addr);
 				out_addr <= in_addr+4;
 				$display("PC: Curr_addr: %d",out_addr) ;
 		end
-	
 endmodule
