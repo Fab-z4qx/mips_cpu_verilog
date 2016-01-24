@@ -6,4 +6,4 @@ This project is not finish actually. But the CPU can compute add,mul,or,and oper
 
 The CPU is 5 stage pipelined. 
 
-Jump operation don't working. 
+Jump op doesnt work.  
